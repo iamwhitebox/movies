@@ -41,7 +41,7 @@ function handleError(res, reason, message, code) {
 
 /*  "/movies"
  *    GET: finds all movies
- *    POST: creates a new contact
+ *    POST: creates a new movie
  */
 
 app.get("/movies", (req, res) => {
@@ -55,16 +55,16 @@ app.get("/movies", (req, res) => {
 });
 
 app.post("/movies", (req, res) => {
-  const newContact = req.body;
-  newContact.createDate = new Date();
+  const newMovie = req.body;
+  newMovie.createDate = new Date();
 
-  if (!(req.body.firstName || req.body.lastName)) {
-    handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
+  if (!(req.body.title || req.body.rating)) {
+    handleError(res, "Invalid user input", "Must provide a title or rating.", 400);
   }
 
-  db.collection(MOVIES_COLLECTION).insertOne(newContact, (err, doc) => {
+  db.collection(MOVIES_COLLECTION).insertOne(newMovie, (err, doc) => {
     if (err) {
-      handleError(res, err.message, "Failed to create new contact.");
+      handleError(res, err.message, "Failed to create new movie.");
     } else {
       res.status(201).json(doc.ops[0]);
     }
@@ -72,15 +72,15 @@ app.post("/movies", (req, res) => {
 });
 
 /*  "/movies/:id"
- *    GET: find contact by id
- *    PUT: update contact by id
- *    DELETE: deletes contact by id
+ *    GET: find movie by id
+ *    PUT: update movie by id
+ *    DELETE: deletes movie by id
  */
 
 app.get("/movies/:id", (req, res) => {
   db.collection(MOVIES_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, (err, doc) => {
     if (err) {
-      handleError(res, err.message, "Failed to get contact");
+      handleError(res, err.message, "Failed to get movie");
     } else {
       res.status(200).json(doc);
     }
@@ -93,7 +93,7 @@ app.put("/movies/:id", (req, res) => {
 
   db.collection(MOVIES_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, (err, doc) => {
     if (err) {
-      handleError(res, err.message, "Failed to update contact");
+      handleError(res, err.message, "Failed to update movie");
     } else {
       res.status(204).end();
     }
@@ -103,7 +103,7 @@ app.put("/movies/:id", (req, res) => {
 app.delete("/movies/:id", (req, res) => {
   db.collection(MOVIES_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, (err, result) => {
     if (err) {
-      handleError(res, err.message, "Failed to delete contact");
+      handleError(res, err.message, "Failed to delete movie");
     } else {
       res.status(204).end();
     }
