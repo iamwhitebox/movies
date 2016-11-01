@@ -30,7 +30,7 @@
     "test": "cross-env NODE_ENV=test ./node_modules/.bin/gulp test",
     "protractor": "cross-env NODE_ENV=test ./node_modules/.bin/gulp protractor",
     "unit": "cross-env NODE_ENV=test ./node_modules/.bin/gulp unit",
-    "postinstall": "node server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
