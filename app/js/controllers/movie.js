@@ -1,4 +1,4 @@
-function MovieController($http) {
+function MovieController() {
 	'ngInject';
 
 	// ViewModel

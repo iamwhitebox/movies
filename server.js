@@ -1,20 +1,20 @@
-import express from "express";
-import path from "path";
-import bodyParser from "body-parser";
-import mongodb from "mongodb";
-const ObjectID = mongodb.ObjectID;
+var express = require("express");
+var path = require("path");
+var bodyParser = require("body-parser");
+var mongodb = require("mongodb");
+var ObjectID = mongodb.ObjectID;
 
-const MOVIES_COLLECTION = "movies";
+var MOVIES_COLLECTION = "movies";
 
-const app = express();
-app.use(express.static(`${__dirname}/app`));
+var app = express();
+app.use(express.static(__dirname + "/build"));
 app.use(bodyParser.json());
 
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
-let db;
+var db;
 
 // Connect to the database before starting the application server.
-mongodb.MongoClient.connect(process.env.MONGODB_URI, (err, database) => {
+mongodb.MongoClient.connect('mongodb://admin:admin@ds059908.mlab.com:59908/iamwhitebox-sandbox-v1', function (err, database) {
   if (err) {
     console.log(err);
     process.exit(1);
@@ -25,8 +25,8 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, (err, database) => {
   console.log("Database connection ready");
 
   // Initialize the app.
-  const server = app.listen(process.env.PORT || 8080, () => {
-    const port = server.address().port;
+  var server = app.listen(process.env.PORT || 3000, function () {
+    var port = server.address().port;
     console.log("App now running on port", port);
   });
 });
@@ -35,7 +35,7 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, (err, database) => {
 
 // Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
-  console.log(`ERROR: ${reason}`);
+  console.log("ERROR: " + reason);
   res.status(code || 500).json({"error": message});
 }
 
@@ -44,8 +44,9 @@ function handleError(res, reason, message, code) {
  *    POST: creates a new movie
  */
 
-app.get("/movies", (req, res) => {
-  db.collection(MOVIES_COLLECTION).find({}).toArray((err, docs) => {
+app.get("/movies", function(req, res) {
+  console.log('got');
+  db.collection(MOVIES_COLLECTION).find({}).toArray(function(err, docs) {
     if (err) {
       handleError(res, err.message, "Failed to get movies.");
     } else {
@@ -54,15 +55,15 @@ app.get("/movies", (req, res) => {
   });
 });
 
-app.post("/movies", (req, res) => {
-  const newMovie = req.body;
+app.post("/movies", function(req, res) {
+  var newMovie = req.body;
   newMovie.createDate = new Date();
 
-  if (!(req.body.title || req.body.rating)) {
-    handleError(res, "Invalid user input", "Must provide a title or rating.", 400);
+  if (!(req.body.firstName || req.body.lastName)) {
+    handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
   }
 
-  db.collection(MOVIES_COLLECTION).insertOne(newMovie, (err, doc) => {
+  db.collection(MOVIES_COLLECTION).insertOne(newMovie, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to create new movie.");
     } else {
@@ -77,8 +78,8 @@ app.post("/movies", (req, res) => {
  *    DELETE: deletes movie by id
  */
 
-app.get("/movies/:id", (req, res) => {
-  db.collection(MOVIES_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, (err, doc) => {
+app.get("/movies/:id", function(req, res) {
+  db.collection(MOVIES_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to get movie");
     } else {
@@ -87,11 +88,11 @@ app.get("/movies/:id", (req, res) => {
   });
 });
 
-app.put("/movies/:id", (req, res) => {
-  const updateDoc = req.body;
+app.put("/movies/:id", function(req, res) {
+  var updateDoc = req.body;
   delete updateDoc._id;
 
-  db.collection(MOVIES_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, (err, doc) => {
+  db.collection(MOVIES_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to update movie");
     } else {
@@ -100,8 +101,8 @@ app.put("/movies/:id", (req, res) => {
   });
 });
 
-app.delete("/movies/:id", (req, res) => {
-  db.collection(MOVIES_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, (err, result) => {
+app.delete("/movies/:id", function(req, res) {
+  db.collection(MOVIES_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
     if (err) {
       handleError(res, err.message, "Failed to delete movie");
     } else {
