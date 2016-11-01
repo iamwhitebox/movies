@@ -1,0 +1,8 @@
+{
+  "name": "MEAN Movie List Example",
+  "description": "A MEAN app that allows users to manage a movie list.",
+  "repository": "https://github.com/iamwhitebox/movies",
+  "logo": "https://mlab.com/company/brand/resources/mLab-logo-onlight.png",
+  "keywords": ["node", "express", "angular", "MEAN", "mongodb", "REST", "API"],
+  "addons": ["mongolab"]
+}
