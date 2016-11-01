@@ -29,13 +29,13 @@
     "deploy": "cross-env NODE_ENV=production ./node_modules/.bin/gulp deploy",
     "test": "cross-env NODE_ENV=test ./node_modules/.bin/gulp test",
     "protractor": "cross-env NODE_ENV=test ./node_modules/.bin/gulp protractor",
-    "unit": "cross-env NODE_ENV=test ./node_modules/.bin/gulp unit",
-    "start": "node server.js"
+    "unit": "cross-env NODE_ENV=test ./node_modules/.bin/gulp unit"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
     "cross-env": "^3.1.1",
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "mongodb": "^2.2.11"
   },
   "devDependencies": {
     "angular": "^1.5.0",
