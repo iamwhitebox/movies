@@ -1,0 +1,15 @@
+<h1> {{watchlist.title}} </h1>
+<input type="text" ng-model="filtered" placeholder="search..." />
+<select ng-model="sorted">
+	<option>Sort by</option>
+	<option value="title">Title</option>
+	<option value="date">Date</option>
+	<option value="rating">Rating</option>
+	<option value="run_time">Runtime</option>
+</select>
+<ul>
+	<li ng-repeat="movie in watchlist.movies | filter: filtered | orderBy: sorted">
+		<a href="/movie/{{movie.title}}"><img class="thumbnail" ng-src="{{movie.image}}" />{{movie.title}}</a> | {{movie.date}} | {{movie.rating}} | {{movie.run_time}}
+		<button ng-click="removeFromWatchlist($index)">-</button>
+	</li>
+</ul>
